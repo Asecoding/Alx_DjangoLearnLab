@@ -1,1 +1,1 @@
-introductoin to python
+creating django project Readme file
