@@ -9,7 +9,7 @@ from .models import Book, Library
 def list_books(request):
     """Display a list of all books with their authors."""
     books = Book.objects.select_related('author').all()
-    return render(request, 'list_books.html', {'books': books})
+    return render(request, 'relationship_app/list_books.html', Book.objects.all(){'books': books})
 
 
 # ---------------------------
