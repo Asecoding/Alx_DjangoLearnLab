@@ -22,4 +22,4 @@ class LibraryDetailView(View):
 
     def get(self, request, pk):
         library = get_object_or_404(Library, pk=pk)
-        return render(request, self.template_name, {'library': library})
+        return render(request, self.relationship_app/library_detail.html", "from .models import Library, {'library': library})
