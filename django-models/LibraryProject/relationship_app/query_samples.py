@@ -31,7 +31,6 @@ Library.objects.get(name="Central Library").books.all()
 # 3️⃣ Retrieve the librarian for a library
 librarian = library.librarian
 print(f"\nLibrarian of {library_name}: {librarian.name}")
-Library.objects.get(name="Central Library").librarian
-
+Librarian.objects.get(library="Central Library").librarian
 Author.objects.get(name=author_name) objects.filter(author=author)
 
