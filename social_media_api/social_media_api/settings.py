@@ -38,8 +38,27 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'accounts',
 ]
+
+# Use the custom user model we will create
+AUTH_USER_MODEL = 'accounts.User'
+
+# DRF default authentication (so token auth is applied)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # optional
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    )
+}
+
+# Media settings for profile pictures
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'   # if using pathlib, otherwise os.path.join(BASE_DIR, 'media')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
