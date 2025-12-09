@@ -1,3 +1,12 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from .models import User
 
-# Register your models here.
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    # you can extend displayed fields if needed
+    fieldsets = UserAdmin.fieldsets + (
+        ('Profile', {'fields': ('bio', 'profile_picture', 'followers')}),
+    )
+
+  
