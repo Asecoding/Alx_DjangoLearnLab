@@ -18,6 +18,13 @@ class User(AbstractUser):
         related_name='following',  # user.following gives users this user follows
         blank=True
     )
+     # Users this user follows (asymmetric relationship)
+    following = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        related_name='followers',
+        blank=True
+    )
 
     def __str__(self):
         return self.username
