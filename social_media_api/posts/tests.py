@@ -34,4 +34,16 @@ class PostCommentAPITests(APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Comment.objects.count(), 1)
         self.assertEqual(Comment.objects.first().author, self.user)
+class FeedTests(APITestCase):
+    def setUp(self):
+        self.u1 = User.objects.create_user(username='u1', password='pass')
+        self.u2 = User.objects.create_user(username='u2', password='pass')
+        # u1 follows u2
+        self.u1.following.add(self.u2)
+        Post.objects.create(author=self.u2, title='X', content='Y')
+        self.client.login(username='u1', password='pass')
 
+    def test_feed_contains_followed_posts(self):
+        resp = self.client.get('/api/posts/feed/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.data['results']), 1)  # paginated results
