@@ -1,0 +1,37 @@
+from rest_framework import serializers
+from .models import Post, Comment
+from django.conf import settings
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class CommentSerializer(serializers.ModelSerializer):
+    author_username = serializers.CharField(source='author.username', read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'post', 'author', 'author_username', 'content', 'created_at', 'updated_at']
+        read_only_fields = ['author', 'author_username', 'created_at', 'updated_at']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['author'] = request.user
+        return super().create(validated_data)
+
+class PostSerializer(serializers.ModelSerializer):
+    author_username = serializers.CharField(source='author.username', read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
+    comments_count = serializers.IntegerField(source='comments.count', read_only=True)
+
+    class Meta:
+        model = Post
+        fields = ['id', 'author', 'author_username', 'title', 'content', 'comments_count', 'comments', 'created_at', 'updated_at']
+        read_only_fields = ['author', 'author_username', 'comments_count', 'comments', 'created_at', 'updated_at']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['author'] = request.user
+        return super().create(validated_data)
+
