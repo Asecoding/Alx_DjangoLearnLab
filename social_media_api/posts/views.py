@@ -8,6 +8,12 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
 
+from rest_framework import generics, permissions
+from django.conf import settings
+from django.db.models import Q
+from .models import Post
+from rest_framework.pagination import PageNumberPagination
+
 class PostViewSet(viewsets.ModelViewSet):
     """
     Provides list, create, retrieve, update, destroy for posts.
@@ -51,4 +57,22 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+class FeedPagination(PageNumberPagination):
+    page_size = 10
+
+class FeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = FeedPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        # posts by users this user follows OR the user's own posts (optional)
+        following_ids = user.following.values_list('id', flat=True)
+        # include self posts optionally:
+        qs = Post.objects.filter(author__id__in=list(following_ids))
+        # If you want the feed to include user's own posts:
+        # qs = Post.objects.filter(Q(author__id__in=list(following_ids)) | Q(author=user))
+        return qs.order_by('-created_at')
 
