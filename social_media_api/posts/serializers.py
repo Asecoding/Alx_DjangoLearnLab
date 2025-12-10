@@ -34,4 +34,16 @@ class PostSerializer(serializers.ModelSerializer):
         if request and hasattr(request, 'user'):
             validated_data['author'] = request.user
         return super().create(validated_data)
+class PostSerializer(serializers.ModelSerializer):
+    author_username = serializers.CharField(source='author.username', read_only=True)
+    author_profile_pic = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = ['id', 'author', 'author_username', 'author_profile_pic', 'title', 'content', 'created_at', 'updated_at']
+
+    def get_author_profile_pic(self, obj):
+        if getattr(obj.author, 'profile_picture', None):
+            return obj.author.profile_picture.url
+        return None
 
