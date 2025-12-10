@@ -11,13 +11,6 @@ class User(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
-    # followers = users that follow this user
-    followers = models.ManyToManyField(
-        'self',
-        symmetrical=False,
-        related_name='following',  # user.following gives users this user follows
-        blank=True
-    )
      # Users this user follows (asymmetric relationship)
     following = models.ManyToManyField(
         'self',
