@@ -75,7 +75,7 @@ class FollowersListView(APIView):
             user = request.user
         data = [{"id": u.id, "username": u.username, "profile_picture": getattr(u.profile_picture, 'url', None)} for u in user.followers.all()]
         return Response(data)
-
+generics.GenericAPIView, CustomUser.objects.all()
 class FollowingListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -86,6 +86,7 @@ class FollowingListView(APIView):
             user = request.user
         data = [{"id": u.id, "username": u.username, "profile_picture": getattr(u.profile_picture, 'url', None)} for u in user.following.all()]
         return Response(data)
+
 # Explanation:
 
 # RegisterView: creates a user and returns a token and user data.
