@@ -75,4 +75,4 @@ class FeedView(generics.ListAPIView):
         # If you want the feed to include user's own posts:
         # qs = Post.objects.filter(Q(author__id__in=list(following_ids)) | Q(author=user))
         return qs.order_by('-created_at')
-
+Post.objects.filter(author__in=following_users).order_by, following.all()
